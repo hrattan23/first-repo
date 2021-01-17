@@ -13,7 +13,7 @@ import basf2 as b2
 import sys
 from stdPhotons import stdPhotons
 import flavorTagger as ft
-from variables.collections import *
+import variables.collections as vc
 from variables.utils import *
 import ROOT as root 
 import vertex
@@ -42,7 +42,9 @@ def main(input_file,output_file, channel,isdata):
     elif channel == 'kst0ee':
         Kst0ee(path)
 #        ft.flavorTagger(particleLists=['B0:kst0Jpsi'],
- #                       belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
+#                        belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
+        b_vars = vc.deltae_mbc + vc.mc_truth + vc.kinematics
+        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='Bd2JpsiKS.root', treename='tree', path=path)
         gv.varKst0ee(path, output_file)
 #        varKst0ee_brem(path, output_file)
     elif channel == 'kst_ksee':
@@ -90,7 +92,7 @@ def makeFSPs(input_file,  isdata):
     variables.addAlias('pi_k', 'pidPairProbabilityExpert(211, 321, ALL)')
     variables.addAlias('k_pi', 'pidPairProbabilityExpert(321, 211, ALL)')
     # electron
-    impactcut = 'abs(d0)<2.0 and abs(z0)<5.0 '
+    impactcut = 'abs(d0)<0.5 and abs(z0)<2.0 '
     # NOTE For BtoXll skim
     # event level cuts: R2 and require a minimum number of tracks
     fillParticleList(decayString='pi+:eventShapeForSkims', cut='pt > 0.1', path=path)
@@ -194,7 +196,7 @@ def reconstruct_B(path, lepton, kstar):
     print(purple, 'reconstruct decay:', end, cyan, chain, end)
     # reconstruction
     reconstructDecay(decayString=chain,
-                     cut='5.2 < Mbc < 5.29 and -0.3 < deltaE < 0.3', path=path)
+                     cut='Mbc > 5.2 and abs(deltaE) < 0.3', path=path)
     matchMCTruth(list_name=Bmeson, path=path)
 #    variablesToNtuple(chain, ['M', 'p', 'E', 'useCMSFrame(p)', 'useCMSFrame(E)', 'daughter(0, kaonID)', 
  #                               'daughter(1, pionID)', 'isSignal', 'mcErrors'], 
@@ -286,6 +288,7 @@ if __name__ == "__main__":
     date = datetime.datetime.today()
     print(date.strftime('End at : %y-%m-%d %H:%M:%S\n'))
     print('time taken', time.time()-stime)
+
 
 
 
