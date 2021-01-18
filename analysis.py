@@ -44,7 +44,7 @@ def main(input_file,output_file, channel,isdata):
 #        ft.flavorTagger(particleLists=['B0:kst0Jpsi'],
 #                        belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
         b_vars = vc.deltae_mbc + vc.mc_truth + vc.kinematics
-        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='Bd2JpsiKS.root', treename='tree', path=path)
+        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='B0:kst0Jpsi_ee.root', treename='tree', path=path)
         gv.varKst0ee(path, output_file)
 #        varKst0ee_brem(path, output_file)
     elif channel == 'kst_ksee':
@@ -273,7 +273,7 @@ if __name__ == "__main__":
     parser1.add_argument('-c', '--channel',
                          help='which channel?   ', default='kst0ee')
     parser1.add_argument('-in', '--inp', help='input file',
-                         default=b2.find_file('/group/belle2/users/tenchini/prerelease-05-00-00a/1111540100/1111540100_eph3_BGx0_29.root'))
+                         default=b2.find_file('/gpfs/group/belle2/users/seemac/Kstll/signal/BtoKstjpsi/kst0jpsi/mdst_000001_prod00012871_task10020000001.root'))
     parser1.add_argument('-out', '--out', help='outputfile', default='~/origin/ee.root')
     parser1.add_argument('-isdata', '--isdata', help='whether data oe mc. For data\
                            momentum corretion for FSP wil take place', default=False)
