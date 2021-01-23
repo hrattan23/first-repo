@@ -35,16 +35,18 @@ cyan = "\033[0;36m"
 def main(input_file,output_file, channel,isdata):
     path = makeFSPs(input_file, isdata)
     if channel == 'kst0mumu':
-        gv.Kst0mumu(path)
-        ft.flavorTagger(particleLists=['B0:kst0mumu'],
-                        belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
-        varKst0mumu(path, output_file)
+        Kst0mumu(path)
+#        ft.flavorTagger(particleLists=['B0:kst0mumu'],
+#                        belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
+        b_vars = vc.deltae_mbc + vc.mc_truth + vc.kinematics
+        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='B0:kst0Jpsi_mumu.root', treename='tree', path=path)
+        gv.varKst0mumu(path, output_file)
     elif channel == 'kst0ee':
         Kst0ee(path)
 #        ft.flavorTagger(particleLists=['B0:kst0Jpsi'],
 #                        belleOrBelle2="Belle2", weightFiles=weightfiles, path=path)
         b_vars = vc.deltae_mbc + vc.mc_truth + vc.kinematics
-        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='B0:kst0Jpsi_ee.root', treename='tree', path=path)
+        variablesToNtuple('B0:kst0Jpsi', variables=b_vars, filename='B0_kst0Jpsi_ee.root', treename='tree', path=path)
         gv.varKst0ee(path, output_file)
 #        varKst0ee_brem(path, output_file)
     elif channel == 'kst_ksee':
@@ -243,7 +245,8 @@ def Apply_VerTexFit(path, lepton, kstar):
 def Kst0ee(path):
     reconstruct_B(path, lepton='e', kstar='kst0')
 
-
+def Kst0mumu(path):
+    reconstruct_B(path, lepton='mu', kstar='kst0')
 
 
 
@@ -271,7 +274,7 @@ if __name__ == "__main__":
     import argparse
     parser1 = argparse.ArgumentParser()
     parser1.add_argument('-c', '--channel',
-                         help='which channel?   ', default='kst0ee')
+                         help='which channel?   ', default='kst0mumu')
     parser1.add_argument('-in', '--inp', help='input file',
                          default=b2.find_file('/gpfs/group/belle2/users/seemac/Kstll/signal/BtoKstjpsi/kst0jpsi/mdst_000001_prod00012871_task10020000001.root'))
     parser1.add_argument('-out', '--out', help='outputfile', default='~/origin/ee.root')
@@ -288,6 +291,7 @@ if __name__ == "__main__":
     date = datetime.datetime.today()
     print(date.strftime('End at : %y-%m-%d %H:%M:%S\n'))
     print('time taken', time.time()-stime)
+
 
 
 
